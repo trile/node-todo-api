@@ -44,7 +44,7 @@ app.get('/todos/:id', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log('Starting server on port:', PORT);
+    console.log(`Starting server on port ${PORT}`);
 });
 
 module.exports = { app };
