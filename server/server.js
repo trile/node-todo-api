@@ -7,6 +7,7 @@ let bodyParser = require('body-parser');
 let PORT = process.env.PORT || 3000;
 
 let {mongoose} = require('./db/mongoose');
+const {ObjectID} = require('mongodb');
 let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
 
@@ -30,6 +31,16 @@ app.get('/todos', (req, res) => {
         (todos) => res.send({todos}),
         (err) => res.status(400).send(err)
     );
+});
+
+app.get('/todos/:id', (req, res) => {
+    id = req.params.id;
+    if (!ObjectID.isValid(id)) return res.status(404).send();
+    Todo.findById(id)
+        .then((todo) => {
+            if (!todo) return res.status(404).send();
+            res.send(todo);
+        }).catch((err) => res.status(400).send(err) );
 });
 
 app.listen(PORT, () => {
