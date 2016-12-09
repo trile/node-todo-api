@@ -15,7 +15,9 @@ const todos = [
     },
     {
         _id: new ObjectID(),
-        text: 'Second test todo'
+        text: 'Second test todo',
+        completed: true,
+        completedAt: 1481263857564
     }
 ];
 
@@ -104,8 +106,9 @@ describe('GET /todos/:id', () => {
 
 describe('DELETE /todos/:id', () => {
     it('should remove a todo', (done) => {
+        let hexId = todos[1]._id.toHexString();
         request(app)
-            .delete(`/todos/${todos[1]._id.toHexString()}`)
+            .delete(`/todos/${hexId}`)
             .expect(200)
             .expect((res) => {
                 expect(res.body.todo.text).toBe(todos[1].text);
@@ -113,7 +116,7 @@ describe('DELETE /todos/:id', () => {
             .end((err, res)=> {
                 if (err) return done(err);
 
-                Todo.findById(`${todos[1]._id.toHexString()}`).then((todo) => {
+                Todo.findById(`${hexId}`).then((todo) => {
                   expect(todo).toNotExist();
                   done();
                 }).catch((err)=> done(err));
@@ -132,4 +135,53 @@ describe('DELETE /todos/:id', () => {
             .expect(404)
             .end(done);
     });
+});
+
+describe('PATCH /todos/:id', () => {
+   it('should update the todo', (done) => {
+       let hexId = todos[0]._id.toHexString();
+       let text = "Updating first test todo";
+       request(app)
+           .patch(`/todos/${hexId}`)
+           .send({
+               text,
+               completed: true
+           })
+           .expect(200)
+           .expect((res) => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(true);
+           })
+           .end((err, res) => {
+                    if (err) return done(err);
+                    Todo.findById(`${hexId}`).then((todo) => {
+                        expect(todo.completedAt).toBeA('number');
+                        done();
+                    }).catch((err) => done(err));
+               }
+           );
+
+   });
+   it('should toggle completedAt when todo is not complete', (done) => {
+       let hexId = todos[1]._id.toHexString();
+       let text = "Updating second test todo";
+        request(app)
+            .patch(`/todos/${hexId}`)
+            .send({
+                text,
+                completed: false
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(false);
+            })
+            .end((err, res) => {
+                if (err) return done(err);
+                Todo.findById(hexId).then((todo)=> {
+                    expect(todo.completedAt).toNotExist();
+                    done();
+                }).catch((err) => done(err));
+            })
+   });
 });
