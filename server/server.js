@@ -1,12 +1,12 @@
 /**
  * Created by trile on 12/8/16.
  */
+require('./config/config');
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
-
-let PORT = process.env.PORT || 3000;
 
 let {mongoose} = require('./db/mongoose');
 let {Todo} = require('./models/todo');
@@ -77,8 +77,8 @@ app.patch('/todos/:id', (req, res) => {
 
 });
 
-app.listen(PORT, () => {
-    console.log(`Starting server on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Starting server on port ${process.env.PORT}`);
 });
 
 module.exports = { app };
