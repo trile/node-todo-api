@@ -22,12 +22,13 @@ app.use((req, res, next) => {
     next();
 });
 
+/* Todos routes */
 app.post('/todos', (req, res) => {
     let todo = new Todo({
         text: req.body.text
     });
     todo.save().then(
-        (doc) => res.send(doc),
+        () => res.send(todo),
         (err) => res.status(400).send(err)
     );
 });
@@ -75,6 +76,25 @@ app.patch('/todos/:id', (req, res) => {
         res.send({todo});
     }).catch((err) => res.status(400).send());
 
+});
+
+/* Users routes */
+app.post('/users', (req, res) => {
+    console.log('Adding new user');
+    let body = _.pick(req.body, ['email', 'password']);
+    console.log(body);
+    let user = new User(body);
+
+    user.save().then(() => {
+        console.log('Successfully insert a new user');
+        return user.generateAuthToken();
+    }).then((token) => {
+        console.log("server: ", token);
+        res.header('x-auth', token).send(user);
+    }).catch ((err) => {
+        console.log('failed to insert new user', err);
+        res.status(400).send(err)
+    });
 });
 
 app.listen(process.env.PORT, () => {

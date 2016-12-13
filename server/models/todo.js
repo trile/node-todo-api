@@ -1,11 +1,9 @@
 /**
  * Created by trile on 12/8/16.
  */
-
 let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
 
-let todoSchema = new Schema({
+let TodoSchema = new mongoose.Schema({
     text: {
         type: String,
         required: true,
@@ -22,6 +20,6 @@ let todoSchema = new Schema({
     }
 });
 
-let Todo = mongoose.model('Todo',  todoSchema);
+let Todo = mongoose.model('Todo',  TodoSchema);
 
 module.exports = {Todo};
