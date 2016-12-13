@@ -11,6 +11,7 @@ const {ObjectID} = require('mongodb');
 let {mongoose} = require('./db/mongoose');
 let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
+let {authenticate} = require('./middlewares/authenticate');
 
 let app = express();
 
@@ -95,6 +96,10 @@ app.post('/users', (req, res) => {
         console.log('failed to insert new user', err);
         res.status(400).send(err)
     });
+});
+
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user);
 });
 
 app.listen(process.env.PORT, () => {
