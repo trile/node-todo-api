@@ -85,7 +85,7 @@ app.post('/users', (req, res) => {
     let body = _.pick(req.body, ['email', 'password']);
     console.log(body);
     let user = new User(body);
-
+    console.log(user);
     user.save().then(() => {
         console.log('Successfully insert a new user');
         return user.generateAuthToken();
