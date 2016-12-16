@@ -17,11 +17,11 @@ let app = express();
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-    let now = new Date().toString();
-    console.log(`${now}: ${req.method} ${req.url}`);
-    next();
-});
+// app.use((req, res, next) => {
+//     let now = new Date().toString();
+//     console.log(`${now}: ${req.method} ${req.url}`);
+//     next();
+// });
 
 /* Todos routes */
 app.post('/todos', (req, res) => {
@@ -81,19 +81,13 @@ app.patch('/todos/:id', (req, res) => {
 
 /* Users routes */
 app.post('/users', (req, res) => {
-    console.log('Adding new user');
     let body = _.pick(req.body, ['email', 'password']);
-    console.log(body);
     let user = new User(body);
-    console.log(user);
     user.save().then(() => {
-        console.log('Successfully insert a new user');
         return user.generateAuthToken();
     }).then((token) => {
-        console.log("server: ", token);
         res.header('x-auth', token).send(user);
     }).catch ((err) => {
-        console.log('failed to insert new user', err);
         res.status(400).send(err)
     });
 });
