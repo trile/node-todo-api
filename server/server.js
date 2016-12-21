@@ -17,11 +17,11 @@ let app = express();
 
 app.use(bodyParser.json());
 
-// app.use((req, res, next) => {
-//     let now = new Date().toString();
-//     console.log(`${now}: ${req.method} ${req.url}`);
-//     next();
-// });
+app.use((req, res, next) => {
+    let now = new Date().toString();
+    console.log(`${now}: ${req.method} ${req.url}`);
+    next();
+});
 
 /* Todos routes */
 app.post('/todos', authenticate, (req, res) => {
