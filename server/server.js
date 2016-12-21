@@ -17,11 +17,11 @@ let app = express();
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-    let now = new Date().toString();
-    console.log(`${now}: ${req.method} ${req.url}`);
-    next();
-});
+// app.use((req, res, next) => {
+//     let now = new Date().toString();
+//     console.log(`${now}: ${req.method} ${req.url}`);
+//     next();
+// });
 
 /* Todos routes */
 app.post('/todos', (req, res) => {
@@ -110,7 +110,6 @@ app.post('/users/login', (req, res) => {
 });
 
 app.delete('/users/me/token', authenticate, (req, res) => {
-    console.log(req.token);
     req.user.removeToken(req.token).then(() => {
         res.status(200).send();
     }), () => {
