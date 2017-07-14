@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by trile on 12/8/16.
  */
 require('./config/config');
